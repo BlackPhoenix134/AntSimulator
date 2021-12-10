@@ -429,3 +429,5 @@ FodyWeavers.xsd
 
 /bin
 /bin-int
+
+!/vendor/bin/premake
