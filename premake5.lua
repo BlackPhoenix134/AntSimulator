@@ -69,7 +69,9 @@ project "AntSimulator"
 	{
 		"vendor/spdlog/include",
 		"vendor/raylib/src",
-		"vendor/entt/single_include"
+		"vendor/mathfu",
+		"vendor/vectorial",
+		"vendor/entt"
 	}
 
 	links {"raylib"}
