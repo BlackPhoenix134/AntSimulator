@@ -4,6 +4,6 @@
 [submodule "vendor/raylib"]
 	path = vendor/raylib
 	url = https://github.com/raysan5/raylib
-[submodule "vendor/mathfu"]
-	path = vendor/mathfu
-	url = https://github.com/google/mathfu
+[submodule "vendor/entt"]
+	path = vendor/entt
+	url = https://github.com/skypjack/entt
