@@ -27,4 +27,8 @@
     <ClInclude Include="src\AntBrainComps.hpp" />
     <ClInclude Include="src\AssetManager.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\marker.png" />
+    <Image Include="assets\ant.png" />
+  </ItemGroup>
 </Project>
