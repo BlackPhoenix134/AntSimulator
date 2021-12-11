@@ -58,9 +58,10 @@ project "AntSimulator"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")	
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+
 	files  
 	{
-		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.hpp",
 		"%{prj.name}/src/**.cpp"
 	}
 
