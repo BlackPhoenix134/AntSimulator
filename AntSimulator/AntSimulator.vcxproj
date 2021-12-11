@@ -26,7 +26,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
+    <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
@@ -43,14 +43,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Debug-windows-x86_64\AntSimulator\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-x86_64\AntSimulator\</IntDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\AntSimulator\Debug\AntSimulator\</IntDir>
     <TargetName>AntSimulator</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Release-windows-x86_64\AntSimulator\</OutDir>
-    <IntDir>..\bin-int\Release-windows-x86_64\AntSimulator\</IntDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\AntSimulator\Release\AntSimulator\</IntDir>
     <TargetName>AntSimulator</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
@@ -62,7 +62,7 @@
       <AdditionalIncludeDirectories>..\vendor\spdlog\include;..\vendor\raylib\src;..\vendor\mathfu;..\vendor\vectorial;..\vendor\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -80,7 +80,7 @@
       <AdditionalIncludeDirectories>..\vendor\spdlog\include;..\vendor\raylib\src;..\vendor\mathfu;..\vendor\vectorial;..\vendor\entt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -91,6 +91,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\AntBrainComps.hpp" />
+    <ClInclude Include="src\AssetManager.hpp" />
+    <ClInclude Include="src\DebugComps.hpp" />
+    <ClInclude Include="src\GeneralComps.hpp" />
+    <ClInclude Include="src\Matrix.hpp" />
+    <ClInclude Include="src\Point.hpp" />
+    <ClInclude Include="src\Prefabs.hpp" />
+    <ClInclude Include="src\RenderComps.hpp" />
+    <ClInclude Include="src\Settings.hpp" />
+    <ClInclude Include="src\SpatialComps.hpp" />
+    <ClInclude Include="src\SpatialHash.hpp" />
+    <ClInclude Include="src\SpatialQuery.hpp" />
+    <ClInclude Include="src\Systems.hpp" />
+    <ClInclude Include="src\World.hpp" />
+    <ClInclude Include="src\random.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AntBrainComps.cpp" />
+    <ClCompile Include="src\AssetManager.cpp" />
+    <ClCompile Include="src\Prefabs.cpp" />
+    <ClCompile Include="src\SpatialHash.cpp" />
+    <ClCompile Include="src\SpatialQuery.cpp" />
+    <ClCompile Include="src\Systems.cpp" />
+    <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

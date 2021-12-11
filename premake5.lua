@@ -39,6 +39,7 @@ project "raylib"
 		location "vendor/raylib"
 		language "C"
 		targetdir ("bin/" .. outputdir .. "/AntSimulator")	
+		objdir ("bin-int/" .. outputdir .. "/AntSimulator")
 		
 		includedirs { "vendor/raylib/src", "vendor/raylib/src/external/glfw/include"}
 		vpaths 
@@ -96,7 +97,11 @@ project "AntSimulator"
 	filter "configurations:Debug"
 		defines { "AS_DEBUG" }
 		symbols "On"
+		staticruntime "off"
+		runtime "Debug"
 
 	filter "configurations:Release"
 		defines { "AS_RELEASE" }
 		symbols "On"
+		staticruntime "On"
+		runtime "Release"
