@@ -67,7 +67,8 @@ project "AntSimulator"
 	includedirs 
 	{
 		"vendor/spdlog/include",
-		"vendor/raylib/src"
+		"vendor/raylib/src",
+		"vendor/mathfu/include/mathfu"
 	}
 
 	links {"raylib"}

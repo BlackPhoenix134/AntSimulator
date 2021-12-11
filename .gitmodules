@@ -4,3 +4,6 @@
 [submodule "vendor/raylib"]
 	path = vendor/raylib
 	url = https://github.com/raysan5/raylib
+[submodule "vendor/mathfu"]
+	path = vendor/mathfu
+	url = https://github.com/google/mathfu
