@@ -2,20 +2,26 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AntSimulator", "AntSimulator\AntSimulator.vcxproj", "{C805B773-B468-4618-5DEE-7ECE4930129B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8898EA18-743A-15EF-5DF5-284349369C3F} = {8898EA18-743A-15EF-5DF5-284349369C3F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raylib", "vendor\raylib\raylib.vcxproj", "{8898EA18-743A-15EF-5DF5-284349369C3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win64 = Debug|Win64
-		Dist|Win64 = Dist|Win64
-		Release|Win64 = Release|Win64
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C805B773-B468-4618-5DEE-7ECE4930129B}.Debug|Win64.ActiveCfg = Debug Win64|x64
-		{C805B773-B468-4618-5DEE-7ECE4930129B}.Debug|Win64.Build.0 = Debug Win64|x64
-		{C805B773-B468-4618-5DEE-7ECE4930129B}.Dist|Win64.ActiveCfg = Dist Win64|x64
-		{C805B773-B468-4618-5DEE-7ECE4930129B}.Dist|Win64.Build.0 = Dist Win64|x64
-		{C805B773-B468-4618-5DEE-7ECE4930129B}.Release|Win64.ActiveCfg = Release Win64|x64
-		{C805B773-B468-4618-5DEE-7ECE4930129B}.Release|Win64.Build.0 = Release Win64|x64
+		{C805B773-B468-4618-5DEE-7ECE4930129B}.Debug|x64.ActiveCfg = Debug|x64
+		{C805B773-B468-4618-5DEE-7ECE4930129B}.Debug|x64.Build.0 = Debug|x64
+		{C805B773-B468-4618-5DEE-7ECE4930129B}.Release|x64.ActiveCfg = Release|x64
+		{C805B773-B468-4618-5DEE-7ECE4930129B}.Release|x64.Build.0 = Release|x64
+		{8898EA18-743A-15EF-5DF5-284349369C3F}.Debug|x64.ActiveCfg = Debug|x64
+		{8898EA18-743A-15EF-5DF5-284349369C3F}.Debug|x64.Build.0 = Debug|x64
+		{8898EA18-743A-15EF-5DF5-284349369C3F}.Release|x64.ActiveCfg = Release|x64
+		{8898EA18-743A-15EF-5DF5-284349369C3F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

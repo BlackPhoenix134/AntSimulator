@@ -46,7 +46,7 @@ project "raylib"
 			["Header Files"] = { "vendor/raylib/src/**.h"},
 			["Source Files/*"] = {"vendor/raylib/src/**.c"},
 		}
-		files {"raylib/src/*.h", "vendor/raylib/src/*.c"}
+		files {"vendor/raylib/src/*.h", "vendor/raylib/src/*.c"}
 
 
 project "AntSimulator"
@@ -66,15 +66,28 @@ project "AntSimulator"
 
 	includedirs 
 	{
-		"%{prj.name}/vendor/spdlog/include"
+		"vendor/spdlog/include",
+		"vendor/raylib/src"
 	}
 
-
+	links {"raylib"}
+	
+	filter "action:vs*"
+		defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS", "_WIN32"}
+		dependson {"raylib"}
+		links {"raylib.lib"}
+        characterset ("MBCS")
+		
+	filter "system:windows"
+		
 
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "10.0.19041.0"
+		defines{"_WIN32"}
+		links {"winmm", "kernel32", "opengl32", "kernel32", "gdi32"}
+		libdirs {"bin/" .. outputdir .. "/%{prj.name}"}
 
 	filter "configurations:Debug"
 		defines { "AS_DEBUG" }
