@@ -10,7 +10,7 @@
     <ClCompile Include="src\SpatialQuery.cpp" />
     <ClCompile Include="src\Systems.cpp" />
     <ClCompile Include="src\World.cpp" />
-    <ClCompile Include="src\Pheromone.cpp" />
+    <ClCompile Include="src\SceneData.cpp" />
     <ClCompile Include="src\PheromoneGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="src\SpatialQuery.hpp" />
     <ClInclude Include="src\Systems.hpp" />
     <ClInclude Include="src\World.hpp" />
-    <ClInclude Include="src\Pheromone.hpp" />
+    <ClInclude Include="src\SceneData.hpp" />
     <ClInclude Include="src\PheromoneGrid.hpp" />
   </ItemGroup>
 </Project>

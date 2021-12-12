@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pheromone.hpp"
+#include "SceneData.hpp"
 #include "Grid.hpp"
 
 namespace PheromoneGrid {

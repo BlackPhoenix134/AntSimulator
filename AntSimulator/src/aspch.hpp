@@ -5,7 +5,7 @@
 #include "DebugComps.hpp"
 #include "GeneralComps.hpp"
 
-#include "Pheromone.hpp"
+#include "SceneData.hpp"
 
 #include "Systems.hpp"
 #include "SpatialQuery.hpp"
