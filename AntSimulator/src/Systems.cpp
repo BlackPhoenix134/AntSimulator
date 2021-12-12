@@ -1,15 +1,8 @@
-#include"Systems.hpp"
-#include"SpatialComps.hpp"
-#include"RenderComps.hpp"
-#include"DebugComps.hpp"
-#include"raylib.h"
-#include"entt.hpp"
-#include"AntBrainComps.hpp"
-#include"AssetManager.hpp"
-#include"GeneralComps.hpp"
-#include"Prefabs.hpp"
+#include "aspch.hpp"
+#include "raylib.h"
 #include "random.hpp"
-#include "Settings.hpp"
+#include "entt.hpp"
+#include "PheromoneGrid.hpp"
 
 namespace Systems {
     void loadTextures(entt::registry& registry) {
@@ -29,6 +22,27 @@ namespace Systems {
             DrawTexturePro(spriteRender.texture, spriteRender.sourceRect, destination, {width/2, height/2}, trans.rotation, spriteRender.tint);
             DrawRectangleLines(trans.position.x - width / 2, trans.position.y - height / 2, width, height, RED);
             });
+    }
+
+
+    void renderPheromones(Grid<Pheromone>& grid) {
+        for (int x = 0; x < grid.getSizeX(); x++) {
+            for (int y = 0; y < grid.getSizeY(); y++) {
+                auto cellPos = mathfu::vec2i(x, y);
+                Pheromone* pheromone = grid.get(cellPos);
+                if (pheromone->type != PheromoneType::None) {
+                    auto texture = Assets::get("assets/marker.png");
+                    auto worldPos = grid.toWorldPos(cellPos);
+
+                    float destWidth = texture.width * grid.getCellSize() / texture.width;
+                    float destHeight = texture.height * grid.getCellSize() / texture.height;
+
+                    DrawTexturePro(texture, { 0, 0, (float)texture.width, (float)texture.height },
+                        { worldPos.x, worldPos.y, destWidth, destHeight },
+                        { destWidth / 2, destHeight / 2 }, 0, GREEN);
+                }
+            }
+        }
     }
 
     void renderAABB(entt::registry& registry) {
@@ -81,20 +95,17 @@ namespace Systems {
 
     }
 
-    void antDropPheromones(entt::registry& registry, float delta)
+    void antDropPheromones(entt::registry& registry, float delta, Grid<Pheromone>& grid)
     {
         auto view = registry.view<Comps::Ant, const Comps::Trans, const Comps::Alive>();
-        view.each([&registry, &delta](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
-            ant.nextMarkerCooldown -= delta;
-            if (ant.nextMarkerCooldown <= 0) {
-                ant.nextMarkerCooldown = Settings::ANT_NEXT_MARKER_COOLDOWN;
+        view.each([&registry, &grid, &delta](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
+            auto& cellIdx = grid.toCellIdx(trans.position);
 
-                Comps::PheromoneType type = Comps::PheromoneType::AntPrecense;
-                if (registry.any_of<Comps::HasFood>(entity))
-                    type = Comps::PheromoneType::ToFood;
-                Prefabs::createPheromone(registry, trans.position, type);
-            }
-            });
+            PheromoneType type = PheromoneType::AntPrecense;
+            if (registry.any_of<Comps::HasFood>(entity))
+                type = PheromoneType::ToFood;
+            PheromoneGrid::set(grid.toCellIdx(trans.position), type, grid);
+        });
     }
 
     void antLifetime(entt::registry& registry, float delta)
@@ -129,10 +140,24 @@ namespace Systems {
             float width = spriteRender.width();
             float height = spriteRender.height();
             spatialHash.add(trans.position, { width, height }, entity);
-            registry.emplace<Comps::SpatiallyHashed>(entity);
+            registry.emplace<Comps::SpatialHashEntry>(entity);
             registry.remove<Comps::StaticSpatialRegister>(entity);
             });
     }
+
+  /*  void handleGridRegistrationPheromones(entt::registry& registry, Grid<entt::entity>& grid)
+    {
+        auto view = registry.view<Comps::Trans, const Comps::Pheromone, const Comps::GridEntryRegister>();
+        view.each([&registry, &grid](const entt::entity entity, Comps::Trans& trans, const Comps::Pheromone& pheromone) {
+            auto& entry = registry.emplace<Comps::GridEntry>(entity);
+            entry.cellIdx = grid.toCellIdx(trans.position);
+           
+            auto before = trans.position;
+            trans.position = grid.toWorldPos(entry.cellIdx);
+            registry.remove<Comps::GridEntryRegister>(entity);
+            });
+    }*/
+
 
     void renderSpatialHash(entt::registry& registry, SpatialHash& spatialHash)
     {
@@ -151,16 +176,19 @@ namespace Systems {
             });
     }
 
-    void pheromoneLifetime(entt::registry& registry, float delta)
-    {
-    /*    auto view = registry.view<Comps::Pheromone, const Comps::Trans, const Comps::SpriteRender>();
-        view.each([&registry, &delta, &spatialHash](entt::entity entity, Comps::Pheromone& phero,
-                const Comps::Trans& trans, const Comps::SpriteRender& spriteRender) {
-            phero.lifeTime -= delta;
-            if (phero.lifeTime <= 0) {
-                spatialHash.remove(trans.position, mathfu::vec2(spriteRender.width(), spriteRender.height()), entity);
-                registry.destroy(entity);
+    
+
+    void pheromoneLifetime(float delta, Grid<Pheromone>& grid) {
+        for (int x = 0; x < grid.getSizeX(); x++) {
+            for (int y = 0; y < grid.getSizeY(); y++) {
+                auto cellPos = mathfu::vec2i(x, y);
+                Pheromone* pheromone = grid.get(cellPos);
+                if (pheromone->type != PheromoneType::None) {
+                    pheromone->lifeTime -= delta;
+                    if (pheromone->lifeTime <= 0)
+                        pheromone->type = PheromoneType::None;
+                }
             }
-            });*/
+        }
     }
 }

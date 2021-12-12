@@ -26,7 +26,14 @@ namespace Comps {
 
 	};
 
-	struct SpatiallyHashed {
+	struct SpatialHashEntry {
 
+	};
+
+	struct GridEntryRegister {
+	};
+
+	struct GridEntry {
+		mathfu::vec2i cellIdx;
 	};
 }

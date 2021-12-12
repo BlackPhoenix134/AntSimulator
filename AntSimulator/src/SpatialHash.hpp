@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include "Point.hpp"
 #include <map>
 #include <raylib.h>
 #include "entt.hpp"

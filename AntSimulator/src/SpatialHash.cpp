@@ -61,14 +61,12 @@ void SpatialHash::remove(const mathfu::vec2i& point, entt::entity value)
 {
 	if (has(point))
 	{
-		auto& container = data[point];
-		bool before = container.find(value) != container.end();
-		container.erase(value);
-		if (container.size() == 0) {
+		auto* container = &(data[point]);
+		container->erase(value);
+		if (container->size() == 0) {
 			auto beforeContainer = has(point);
 			auto sizeBefore = data.size();
 			data.erase(point);
-			printf("found before %d found after %d size %d size after %d\n", beforeContainer, has(point), sizeBefore, data.size());
 		}
 	}
 }

@@ -1,13 +1,8 @@
 #define RAYGUI_IMPLEMENTATION
-
+#include "aspch.hpp"
 #include "raylib.h"
 #include "entt.hpp"
-#include "AntBrainComps.hpp"
-#include "RenderComps.hpp"
-#include "DebugComps.hpp"
 #include "World.hpp"
-#include "Prefabs.hpp"
-#include "SpatialComps.hpp"
 #include <memory>
 
 constexpr auto SCREEN_WIDTH = 1920;
@@ -30,12 +25,9 @@ int main()
 
     std::unique_ptr<World> world(new World());
 
-    for (auto i = 0; i < 2; ++i) {
-        //auto entity = Prefabs::createAnt(registry, { (float)i * 100.f, i * 400.f });
+    for (auto i = 0; i < 100; ++i) {
+        auto entity = Prefabs::createAnt(registry, { 0,0 });
     }
-    Prefabs::createAnt(registry, { 0, 0 });
-    //Prefabs::createAnt(registry, { 25 * 5.f, 25 * 4.f });
-    //Prefabs::createAnt(registry, { 25 * -5.f, 25 * 5.f });
 
 
     while (!WindowShouldClose())

@@ -30,10 +30,10 @@ void World::updateUI(entt::registry& registry)
 }
 
 
-
 void World::updateRendering(entt::registry& registry, float delta)
 {
     Systems::loadTextures(registry);
+    Systems::renderPheromones(grid);
     Systems::render(registry);
 }
 
@@ -58,7 +58,7 @@ void World::updateAntLogic(entt::registry& registry, float delta)
     
 
     Systems::antRandomMovement(registry);
-    Systems::antDropPheromones(registry, delta);
+    Systems::antDropPheromones(registry, delta, grid);
     Systems::antSensePheromones(registry);
     Systems::antFollowTrail(registry);
     Systems::antBringFoodHome(registry);
@@ -66,5 +66,5 @@ void World::updateAntLogic(entt::registry& registry, float delta)
 
 void World::updatePheromoneLogic(entt::registry& registry, float delta)
 {
-    Systems::pheromoneLifetime(registry, delta);
+    Systems::pheromoneLifetime(delta, grid);
 }
