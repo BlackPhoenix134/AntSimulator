@@ -13,7 +13,7 @@ public:
 	mathfu::vec2 toWorldPos(const mathfu::vec2i& cellIdx) const;
 	T* get(const mathfu::vec2& worldPos);
 	T* get(const mathfu::vec2i& cellIdx);
-	void set(const mathfu::vec2i& cellIdx, T& value);
+	void set(const mathfu::vec2i& cellIdx, const T& value);
 	void set(const mathfu::vec2i& cellIdx, T&& value);
 	bool has(const mathfu::vec2i& cellPos);
 	const std::vector<T>& getData();

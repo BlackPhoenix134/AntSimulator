@@ -36,7 +36,7 @@ T* Grid<T>::get(const mathfu::vec2i& cellIdx) {
 }
 
 template<typename T>
-void Grid<T>::set(const mathfu::vec2i& cellIdx, T& value)
+void Grid<T>::set(const mathfu::vec2i& cellIdx, const T& value)
 {
 	data[sizeX * cellIdx.y + cellIdx.x] = value;
 }
