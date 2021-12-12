@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "random.hpp"
 #include "entt.hpp"
-#include "PheromoneGrid.hpp"
+#include "WorldGrid.hpp"
 
 namespace Systems {
     void loadTextures(entt::registry& registry) {
@@ -25,7 +25,7 @@ namespace Systems {
     }
 
 
-    void renderPheromones(Grid<Pheromone>& grid) {
+    void renderWorldGridEntries(WorldGrid& grid) {
         for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
@@ -95,7 +95,7 @@ namespace Systems {
 
     }
 
-    void antDropPheromones(entt::registry& registry, float delta, Grid<Pheromone>& grid)
+    void antDropPheromones(entt::registry& registry, float delta, WorldGrid& grid)
     {
         auto view = registry.view<Comps::Ant, const Comps::Trans, const Comps::Alive>();
         view.each([&registry, &grid, &delta](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
@@ -104,6 +104,7 @@ namespace Systems {
             PheromoneType type = PheromoneType::AntPrecense;
             if (registry.any_of<Comps::HasFood>(entity))
                 type = PheromoneType::ToFood;
+            grid.
             PheromoneGrid::set(grid.toCellIdx(trans.position), type, grid);
         });
     }
@@ -178,7 +179,7 @@ namespace Systems {
 
     
 
-    void pheromoneLifetime(float delta, Grid<Pheromone>& grid) {
+    void pheromoneLifetime(float delta, WorldGrid& grid) {
         for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);

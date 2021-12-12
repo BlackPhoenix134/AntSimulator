@@ -33,7 +33,7 @@ void World::updateUI(entt::registry& registry)
 void World::updateRendering(entt::registry& registry, float delta)
 {
     Systems::loadTextures(registry);
-    Systems::renderPheromones(grid);
+    Systems::renderWorldGridEntries(grid);
     Systems::render(registry);
 }
 

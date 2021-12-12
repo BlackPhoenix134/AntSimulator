@@ -14,7 +14,7 @@ public:
 	T* get(const mathfu::vec2& worldPos);
 	T* get(const mathfu::vec2i& cellIdx);
 	void set(const mathfu::vec2i& cellIdx, T pheromone);
-	bool Grid<T>::has(const mathfu::vec2i& cellPos);
+	bool has(const mathfu::vec2i& cellPos);
 	const std::vector<T>& getData();
 	short getSizeX();
 	short getSizeY();

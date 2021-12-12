@@ -1,7 +1,7 @@
 #pragma once
 #include "entt.hpp"
 #include "SpatialHash.hpp"
-#include "Grid.hpp"
+#include "WorldGrid.hpp"
 
 namespace Systems {
     void loadTextures(entt::registry& registry);
@@ -9,7 +9,7 @@ namespace Systems {
     void renderAABB(entt::registry& registry);
     void renderSpatialHash(entt::registry& registry, SpatialHash& spatialHash);
     void renderVelocity(entt::registry& registry);
-    void renderPheromones(Grid<Pheromone>& grid);
+    void renderWorldGridEntries(WorldGrid& grid);
 
     void applyVelocity(entt::registry& registry, float delta);
 
@@ -24,8 +24,8 @@ namespace Systems {
 
 
     void handleSpatialHashRegistration(entt::registry& registry, SpatialHash& grid);
-    void antDropPheromones(entt::registry& registry, float delta, Grid<Pheromone>& grid);
-    void pheromoneLifetime(float delta, Grid<Pheromone>& spatialHash);
+    void antDropPheromones(entt::registry& registry, float delta, WorldGrid& grid);
+    void pheromoneLifetime(float delta, WorldGrid& spatialHash);
 
 }
 

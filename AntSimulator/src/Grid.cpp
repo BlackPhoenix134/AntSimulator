@@ -36,9 +36,9 @@ T* Grid<T>::get(const mathfu::vec2i& cellIdx) {
 }
 
 template<typename T>
-void Grid<T>::set(const mathfu::vec2i& cellIdx, T pheromone)
+void Grid<T>::set(const mathfu::vec2i& cellIdx, T data)
 {
-	data[sizeX * cellIdx.y + cellIdx.x] = pheromone;
+	data[sizeX * cellIdx.y + cellIdx.x] = data;
 }
 
 template <typename T>
@@ -73,5 +73,4 @@ short Grid<T>::getCellSize() {
 	return cellSize;
 }
 
-template class Grid<entt::entity>; 
-template class Grid<Pheromone>;
+template class Grid<std::unique_ptr<WorldGridEntry>>;

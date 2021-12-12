@@ -101,7 +101,7 @@
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\SceneData.cpp" />
-    <ClCompile Include="src\PheromoneGrid.cpp" />
+    <ClCompile Include="src\WorldGrid.cpp" />
     <ClCompile Include="src\Prefabs.cpp" />
     <ClCompile Include="src\SpatialHash.cpp" />
     <ClCompile Include="src\SpatialQuery.cpp" />
@@ -116,7 +116,7 @@
     <ClInclude Include="src\GeneralComps.hpp" />
     <ClInclude Include="src\Grid.hpp" />
     <ClInclude Include="src\SceneData.hpp" />
-    <ClInclude Include="src\PheromoneGrid.hpp" />
+    <ClInclude Include="src\WorldGrid.hpp" />
     <ClInclude Include="src\Prefabs.hpp" />
     <ClInclude Include="src\Random.hpp" />
     <ClInclude Include="src\RenderComps.hpp" />
