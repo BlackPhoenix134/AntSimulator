@@ -21,6 +21,11 @@ void WorldGrid::set(const mathfu::vec2i& cellIdx, WorldGridEntry entry)
 	grid.set(cellIdx, std::unique_ptr<WorldGridEntry>(new WorldGridEntry(entry)));
 }
 
+void WorldGrid::remove(const mathfu::vec2i& cellIdx)
+{
+	grid.set(cellIdx, nullptr);
+}
+
 bool WorldGrid::has(const mathfu::vec2i& cellIdx)
 {
 	return grid.get(cellIdx) != nullptr;

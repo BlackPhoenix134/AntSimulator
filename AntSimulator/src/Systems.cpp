@@ -29,8 +29,8 @@ namespace Systems {
         for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
-                Pheromone* pheromone = grid.get(cellPos);
-                if (pheromone->type != PheromoneType::None) {
+                if (grid.has(cellPos)) {
+                    auto* entry = grid.get(cellPos);
                     auto texture = Assets::get("assets/marker.png");
                     auto worldPos = grid.toWorldPos(cellPos);
 
@@ -100,12 +100,11 @@ namespace Systems {
         auto view = registry.view<Comps::Ant, const Comps::Trans, const Comps::Alive>();
         view.each([&registry, &grid, &delta](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
             auto& cellIdx = grid.toCellIdx(trans.position);
-
+            
             PheromoneType type = PheromoneType::AntPrecense;
             if (registry.any_of<Comps::HasFood>(entity))
                 type = PheromoneType::ToFood;
-            grid.
-            PheromoneGrid::set(grid.toCellIdx(trans.position), type, grid);
+            grid.set(grid.toCellIdx(trans.position), Pheromone(type));
         });
     }
 
@@ -183,11 +182,11 @@ namespace Systems {
         for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
-                Pheromone* pheromone = grid.get(cellPos);
-                if (pheromone->type != PheromoneType::None) {
+                Pheromone* pheromone = dynamic_cast<Pheromone*>(grid.get(cellPos));
+                if (pheromone != nullptr) {
                     pheromone->lifeTime -= delta;
                     if (pheromone->lifeTime <= 0)
-                        pheromone->type = PheromoneType::None;
+                        grid.remove(cellPos);
                 }
             }
         }

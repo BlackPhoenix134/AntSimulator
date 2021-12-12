@@ -14,6 +14,7 @@ public:
 	mathfu::vec2i toCellIdx(const mathfu::vec2& worldPos) const;
 	mathfu::vec2 toWorldPos(const mathfu::vec2i& cellIdx) const;
 	void set(const mathfu::vec2i& cellIdx, WorldGridEntry entry);
+	void remove(const mathfu::vec2i& cellIdx);
 	bool has(const mathfu::vec2i& cellIdx);
 	short getSizeX();
 	short getSizeY();

@@ -3,7 +3,7 @@
 #include <iostream>
 
 class WorldGridEntry {
-
+	virtual void poly();
 };
 
 
@@ -13,6 +13,8 @@ enum class PheromoneType : uint8_t {
 
 class Pheromone: public WorldGridEntry {
 public:
+	Pheromone();
+	Pheromone(PheromoneType type);
 	PheromoneType type = PheromoneType::AntPrecense;
 	float lifeTime = Settings::PHEROMONE_LIFETIME;
 };

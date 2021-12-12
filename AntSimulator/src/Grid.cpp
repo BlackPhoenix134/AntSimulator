@@ -36,9 +36,15 @@ T* Grid<T>::get(const mathfu::vec2i& cellIdx) {
 }
 
 template<typename T>
-void Grid<T>::set(const mathfu::vec2i& cellIdx, T data)
+void Grid<T>::set(const mathfu::vec2i& cellIdx, T& value)
 {
-	data[sizeX * cellIdx.y + cellIdx.x] = data;
+	data[sizeX * cellIdx.y + cellIdx.x] = value;
+}
+
+template<typename T>
+void Grid<T>::set(const mathfu::vec2i& cellIdx, T&& value)
+{
+	data[sizeX * cellIdx.y + cellIdx.x] = std::move(value);
 }
 
 template <typename T>
