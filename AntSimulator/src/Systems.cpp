@@ -1,8 +1,8 @@
 #include "aspch.hpp"
+#include "Systems.hpp"
 #include "raylib.h"
 #include "random.hpp"
 #include "entt.hpp"
-#include "WorldGrid.hpp"
 
 namespace Systems {
     void loadTextures(entt::registry& registry) {
@@ -25,13 +25,13 @@ namespace Systems {
     }
 
 
-    void renderWorldGridEntries(WorldGrid& grid) {
+    void renderWorldGridEntries(Grid<std::unique_ptr<WorldGridEntry>>& grid) {
         for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
-                if (grid.has(cellPos)) {
-                    auto* entry = grid.get(cellPos);
-                    auto texture = Assets::get("assets/marker.png");
+                auto* entry = grid.get(cellPos)->get();
+                if (entry != nullptr) {
+                    auto texture = entry->getTexture();
                     auto worldPos = grid.toWorldPos(cellPos);
 
                     float destWidth = texture.width * grid.getCellSize() / texture.width;
@@ -39,7 +39,7 @@ namespace Systems {
 
                     DrawTexturePro(texture, { 0, 0, (float)texture.width, (float)texture.height },
                         { worldPos.x, worldPos.y, destWidth, destHeight },
-                        { destWidth / 2, destHeight / 2 }, 0, GREEN);
+                        { destWidth / 2, destHeight / 2 }, 0, entry->getColor());
                 }
             }
         }
@@ -82,20 +82,24 @@ namespace Systems {
             });
     }
 
-    void antSensePheromones(entt::registry& registry)
+    void antSensePheromones(entt::registry& registry, Grid<std::unique_ptr<WorldGridEntry>>& grid)
     {
-        //ToDo: check in vicinity 
-        //auto view = registry.view<const Comps::Trans, const Comps::Ant>(entt::exclude<Comps::HasFood>);
-        //get pheromones, steer towards other ants, or follow food
-        //ToDo: rotate forward
+        auto view = registry.view<const Comps::Trans, Comps::Velocity, const Comps::Ant>();
+        view.each([&registry, &grid](const entt::entity entity, const Comps::Trans& trans, Comps::Velocity& vel, const Comps::Ant ant) {
+            mathfu::vec2 up = vectorFromRotation(trans.rotation);
+            mathfu::vec2 upLeft = vectorFromRotation(trans.rotation - 45);
+            mathfu::vec2 upRight = vectorFromRotation(trans.rotation + 45);
+            float size = grid.getCellSize();
+            mathfu::vec2i upCell = grid.toCellIdx(trans.position + up * size);
+            mathfu::vec2i upLeftCell = grid.toCellIdx(trans.position + upLeft * size);
+            mathfu::vec2i upRightCell = grid.toCellIdx(trans.position + upRight * size);
+
+
+            });
     }
 
-    void antFollowTrail(entt::registry& registry)
-    {
 
-    }
-
-    void antDropPheromones(entt::registry& registry, float delta, WorldGrid& grid)
+    void antDropPheromones(entt::registry& registry, float delta, Grid<std::unique_ptr<WorldGridEntry>>& grid)
     {
         auto view = registry.view<Comps::Ant, const Comps::Trans, const Comps::Alive>();
         view.each([&registry, &grid, &delta](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
@@ -104,7 +108,7 @@ namespace Systems {
             PheromoneType type = PheromoneType::AntPrecense;
             if (registry.any_of<Comps::HasFood>(entity))
                 type = PheromoneType::ToFood;
-            grid.set(grid.toCellIdx(trans.position), Pheromone(type));
+            grid.set(grid.toCellIdx(trans.position - trans.getForward() * 10.f), std::unique_ptr<Pheromone>(new Pheromone(type)));
         });
     }
 
@@ -178,11 +182,12 @@ namespace Systems {
 
     
 
-    void pheromoneLifetime(float delta, WorldGrid& grid) {
+    void pheromoneLifetime(float delta, Grid<std::unique_ptr<WorldGridEntry>>& grid) {
         for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
-                Pheromone* pheromone = dynamic_cast<Pheromone*>(grid.get(cellPos));
+                WorldGridEntry* entry = grid.get(cellPos)->get();
+                Pheromone* pheromone = dynamic_cast<Pheromone*>(grid.get(cellPos)->get());
                 if (pheromone != nullptr) {
                     pheromone->lifeTime -= delta;
                     if (pheromone->lifeTime <= 0)

@@ -2,14 +2,17 @@
 #include"entt.hpp"
 #include "aspch.hpp"
 
-constexpr int spatialHashCellSize = 100;
+constexpr short spatialHashCellSize = 100;
+constexpr short gridSize = 500;
+constexpr short gridCellSize(25);
 
 
 class World {
 private:
 
     SpatialHash spatialHash = SpatialHash(spatialHashCellSize);
-    WorldGrid grid = WorldGrid();
+    Grid<std::unique_ptr<WorldGridEntry>> grid =
+        Grid<std::unique_ptr<WorldGridEntry>>(gridSize, gridSize, gridCellSize, mathfu::vec2(gridSize / 2 * gridCellSize));
     void updateRendering(entt::registry& registry, float delta);
     void updateDebugRendering(entt::registry& registry, float delta);
     void updatePhysics(entt::registry& registry, float delta);

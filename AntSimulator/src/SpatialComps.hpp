@@ -1,7 +1,8 @@
 #pragma once
-#include<raylib.h>
+#include <raylib.h>
 #include <mathfu/glsl_mappings.h>
 #include <mathfu/constants.h>
+#include "VectorUtils.hpp"
 
 namespace Comps {
 	struct Trans {
@@ -11,10 +12,7 @@ namespace Comps {
 		float rotation = 0;
 
 		mathfu::vec2 getForward() const {
-			float radians = rotation * (PI / 180);
-			float cosValue = cos(radians);
-			float sinValue = sin(radians);
-			return mathfu::vec2(cosValue, sinValue);
+			return vectorFromRotation(rotation);
 		}
 	};
 

@@ -91,41 +91,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\vendor\raylib\raylib.vcxproj">
-      <Project>{8898EA18-743A-15EF-5DF5-284349369C3F}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\AntBrainComps.cpp" />
-    <ClCompile Include="src\AssetManager.cpp" />
-    <ClCompile Include="src\Grid.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\SceneData.cpp" />
-    <ClCompile Include="src\WorldGrid.cpp" />
-    <ClCompile Include="src\Prefabs.cpp" />
-    <ClCompile Include="src\SpatialHash.cpp" />
-    <ClCompile Include="src\SpatialQuery.cpp" />
-    <ClCompile Include="src\Systems.cpp" />
-    <ClCompile Include="src\World.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="src\AntBrainComps.hpp" />
-    <ClInclude Include="src\aspch.hpp" />
     <ClInclude Include="src\AssetManager.hpp" />
     <ClInclude Include="src\DebugComps.hpp" />
     <ClInclude Include="src\GeneralComps.hpp" />
     <ClInclude Include="src\Grid.hpp" />
-    <ClInclude Include="src\SceneData.hpp" />
-    <ClInclude Include="src\WorldGrid.hpp" />
     <ClInclude Include="src\Prefabs.hpp" />
     <ClInclude Include="src\Random.hpp" />
     <ClInclude Include="src\RenderComps.hpp" />
+    <ClInclude Include="src\SceneData.hpp" />
     <ClInclude Include="src\Settings.hpp" />
     <ClInclude Include="src\SpatialComps.hpp" />
     <ClInclude Include="src\SpatialHash.hpp" />
     <ClInclude Include="src\SpatialQuery.hpp" />
     <ClInclude Include="src\Systems.hpp" />
+    <ClInclude Include="src\VectorUtils.hpp" />
     <ClInclude Include="src\World.hpp" />
+    <ClInclude Include="src\aspch.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AntBrainComps.cpp" />
+    <ClCompile Include="src\AssetManager.cpp" />
+    <ClCompile Include="src\Grid.cpp" />
+    <ClCompile Include="src\Prefabs.cpp" />
+    <ClCompile Include="src\SceneData.cpp" />
+    <ClCompile Include="src\SpatialHash.cpp" />
+    <ClCompile Include="src\SpatialQuery.cpp" />
+    <ClCompile Include="src\Systems.cpp" />
+    <ClCompile Include="src\VectorUtils.cpp" />
+    <ClCompile Include="src\World.cpp" />
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\vendor\raylib\raylib.vcxproj">
+      <Project>{8898EA18-743A-15EF-5DF5-284349369C3F}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

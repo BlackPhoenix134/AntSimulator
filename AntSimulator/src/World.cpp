@@ -52,15 +52,12 @@ void World::updatePhysics(entt::registry& registry, float delta)
 void World::updateAntLogic(entt::registry& registry, float delta) 
 {
     Systems::antBirth(registry);
-
     Systems::antLifetime(registry, delta);
     Systems::antDeath(registry);
-    
 
     Systems::antRandomMovement(registry);
+    Systems::antSensePheromones(registry, grid);
     Systems::antDropPheromones(registry, delta, grid);
-    Systems::antSensePheromones(registry);
-    Systems::antFollowTrail(registry);
     Systems::antBringFoodHome(registry);
 }
 
