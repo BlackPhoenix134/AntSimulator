@@ -35,13 +35,15 @@ class SpatialHash
 		SpatialHash(int cellSize);
 		~SpatialHash(void);
 		mathfu::vec2i toCellIdx(const mathfu::vec2& position);
+		void add(const mathfu::vec2& position, entt::entity value);
 		void add(const mathfu::vec2i& point, entt::entity value);
 		void add(const mathfu::vec2& position, const mathfu::vec2& size, entt::entity value);
+		void remove(const mathfu::vec2& position, entt::entity value);
+		void remove(const mathfu::vec2& position, const mathfu::vec2& size, entt::entity value);
 		void remove(const mathfu::vec2i& point, entt::entity value);
 		const std::unordered_set<entt::entity>& get(const mathfu::vec2i& point);
 		bool has(const mathfu::vec2i& point);
 		bool has(const mathfu::vec2& position);
-		void remove(const mathfu::vec2& position, const mathfu::vec2& size, entt::entity value);
 		int getCellSize();
 		const std::unordered_map<mathfu::vec2i, std::unordered_set<entt::entity>, Hasher>& getData();
 };

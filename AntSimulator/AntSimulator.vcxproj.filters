@@ -31,5 +31,6 @@
     <ClInclude Include="src\World.hpp" />
     <ClInclude Include="src\SceneData.hpp" />
     <ClInclude Include="src\VectorUtils.hpp" />
+    <ClInclude Include="src\Context.hpp" />
   </ItemGroup>
 </Project>

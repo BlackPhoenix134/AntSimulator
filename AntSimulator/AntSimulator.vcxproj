@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClInclude Include="src\AntBrainComps.hpp" />
     <ClInclude Include="src\AssetManager.hpp" />
+    <ClInclude Include="src\Context.hpp" />
     <ClInclude Include="src\DebugComps.hpp" />
     <ClInclude Include="src\GeneralComps.hpp" />
     <ClInclude Include="src\Grid.hpp" />

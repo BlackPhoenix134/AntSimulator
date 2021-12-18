@@ -5,16 +5,16 @@
 #include "entt.hpp"
 
 namespace Systems {
-    void loadTextures(entt::registry& registry) {
-        auto view = registry.view<const Comps::TextureStr, Comps::SpriteRender>();
-        view.each([&registry](const entt::entity entity, const Comps::TextureStr& textureStr, Comps::SpriteRender& spriteRender) {
+    void loadTextures(Context& context) {
+        auto view = context.registry.view<const Comps::TextureStr, Comps::SpriteRender>();
+        view.each([&context](const entt::entity entity, const Comps::TextureStr& textureStr, Comps::SpriteRender& spriteRender) {
             spriteRender.texture = Assets::get(textureStr.name.c_str());
-            registry.remove<Comps::TextureStr>(entity);
+            context.registry.remove<Comps::TextureStr>(entity);
             });
     }
 
-    void render(entt::registry& registry) {
-        auto view = registry.view<const Comps::Trans, Comps::SpriteRender>();
+    void render(Context& context) {
+        auto view = context.registry.view<const Comps::Trans, Comps::SpriteRender>();
         view.each([](const Comps::Trans& trans, Comps::SpriteRender& spriteRender) {
             float width = spriteRender.width();
             float height = spriteRender.height();
@@ -25,8 +25,8 @@ namespace Systems {
     }
 
 
-    void renderWorldGridEntries(Grid<std::unique_ptr<WorldGridEntry>>& grid) {
-        for (int x = 0; x < grid.getSizeX(); x++) {
+    void renderWorldGridEntries(Context& context) {
+       /* for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
                 auto* entry = grid.get(cellPos)->get();
@@ -42,11 +42,30 @@ namespace Systems {
                         { destWidth / 2, destHeight / 2 }, 0, entry->getColor());
                 }
             }
-        }
+        }*/
     }
 
-    void renderAABB(entt::registry& registry) {
-        auto view = registry.view<const Comps::Trans, Comps::SpriteRender, const Comps::ShowAABB>();
+    void renderWorldWalls(Context& context)
+    {
+         auto& worldWalls = context.worldWalls;
+         auto texture = Assets::get("assets/marker.png");
+         float width = texture.width * worldWalls.getCellSize() / texture.width;
+         float height = texture.height * worldWalls.getCellSize() / texture.height;
+
+         for (int x = 0; x < worldWalls.getSizeX(); x++) {
+             for (int y = 0; y < worldWalls.getSizeY(); y++) {
+                 if (*worldWalls.get(mathfu::vec2i(x,y))) {
+                     auto pos = mathfu::vec2(x, y);
+                     Rectangle destination = { pos.x, pos.y , width, height};
+                     DrawTexturePro(texture, { 0,0,(float)texture.width,(float)texture.height }, destination, { width / 2, height / 2 }, 0, WHITE);
+
+                 }
+             }
+         }
+    }
+
+    void renderAABB(Context& context) {
+        auto view = context.registry.view<const Comps::Trans, Comps::SpriteRender, const Comps::ShowAABB>();
         view.each([](const Comps::Trans& trans, Comps::SpriteRender& spriteRender) {
             float width = spriteRender.width();
             float height = spriteRender.height();
@@ -54,98 +73,98 @@ namespace Systems {
             });
     }
 
-    void applyVelocity(entt::registry& registry, float delta) {
-        auto view = registry.view<Comps::Trans, const Comps::Velocity>();
-        view.each([&delta](Comps::Trans& trans, const Comps::Velocity& velocity) {
-            trans.position.x += velocity.value.x * delta;
-            trans.position.y += velocity.value.y * delta;
+    void applyVelocity(Context& context) {
+        auto view = context.registry.view<Comps::Trans, const Comps::Velocity>();
+        view.each([&context](Comps::Trans& trans, const Comps::Velocity& velocity) {
+            trans.position.x += velocity.value.x * context.deltaTime;
+            trans.position.y += velocity.value.y * context.deltaTime;
             });
     }
 
     
-    void antBirth(entt::registry& registry)
+    void antBirth(Context& context)
     {
-        auto view = registry.view<Comps::Trans, const Comps::Ant, const Comps::Newborn>();
-        view.each([&registry](const entt::entity entity, Comps::Trans& trans, const Comps::Ant) {
+        auto view = context.registry.view<Comps::Trans, const Comps::Ant, const Comps::Newborn>();
+        view.each([&context](const entt::entity entity, Comps::Trans& trans, const Comps::Ant) {
             trans.rotation = randomFloat(0.f, 360.f);
-            registry.remove<Comps::Newborn>(entity);
+            context.registry.remove<Comps::Newborn>(entity);
             });
     }
 
-    void antRandomMovement(entt::registry& registry)
+    void antRandomMovement(Context& context)
     {
-        auto view = registry.view<const Comps::Trans, Comps::Velocity, const Comps::Ant>();
-        view.each([&registry](const entt::entity entity, const Comps::Trans& trans, Comps::Velocity& vel, const Comps::Ant ant) {
+        auto view = context.registry.view<const Comps::Trans, Comps::Velocity, const Comps::Ant>();
+        view.each([&context](const entt::entity entity, const Comps::Trans& trans, Comps::Velocity& vel, const Comps::Ant ant) {
             mathfu::vec2 direction = trans.getForward();
             vel.value.x = direction.x * ant.moveSpeed;
             vel.value.y = direction.y * ant.moveSpeed;
             });
     }
 
-    void antSensePheromones(entt::registry& registry, Grid<std::unique_ptr<WorldGridEntry>>& grid)
+    void antSensePheromones(Context& context)
     {
-        auto view = registry.view<const Comps::Trans, Comps::Velocity, const Comps::Ant>();
-        view.each([&registry, &grid](const entt::entity entity, const Comps::Trans& trans, Comps::Velocity& vel, const Comps::Ant ant) {
-            mathfu::vec2 up = vectorFromRotation(trans.rotation);
+        auto view = context.registry.view<const Comps::Trans, Comps::Velocity, const Comps::Ant>();
+        view.each([&context](const entt::entity entity, const Comps::Trans& trans, Comps::Velocity& vel, const Comps::Ant ant) {
+          /*  mathfu::vec2 up = vectorFromRotation(trans.rotation);
             mathfu::vec2 upLeft = vectorFromRotation(trans.rotation - 45);
             mathfu::vec2 upRight = vectorFromRotation(trans.rotation + 45);
             float size = grid.getCellSize();
             mathfu::vec2i upCell = grid.toCellIdx(trans.position + up * size);
             mathfu::vec2i upLeftCell = grid.toCellIdx(trans.position + upLeft * size);
-            mathfu::vec2i upRightCell = grid.toCellIdx(trans.position + upRight * size);
+            mathfu::vec2i upRightCell = grid.toCellIdx(trans.position + upRight * size);*/
 
 
             });
     }
 
 
-    void antDropPheromones(entt::registry& registry, float delta, Grid<std::unique_ptr<WorldGridEntry>>& grid)
+    void antDropPheromones(Context& context)
     {
-        auto view = registry.view<Comps::Ant, const Comps::Trans, const Comps::Alive>();
-        view.each([&registry, &grid, &delta](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
-            auto& cellIdx = grid.toCellIdx(trans.position);
+        auto view = context.registry.view<Comps::Ant, const Comps::Trans, const Comps::Alive>();
+        view.each([&context](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
+          /*  auto& cellIdx = grid.toCellIdx(trans.position);
             
             PheromoneType type = PheromoneType::AntPrecense;
             if (registry.any_of<Comps::HasFood>(entity))
                 type = PheromoneType::ToFood;
-            grid.set(grid.toCellIdx(trans.position - trans.getForward() * 10.f), std::unique_ptr<Pheromone>(new Pheromone(type)));
+            grid.set(grid.toCellIdx(trans.position - trans.getForward() * 10.f), std::unique_ptr<Pheromone>(new Pheromone(type)));*/
         });
     }
 
-    void antLifetime(entt::registry& registry, float delta)
+    void antLifetime(Context& context)
     {
-        auto view = registry.view<Comps::Ant, const Comps::Alive>();
-        view.each([&registry, &delta](const entt::entity entity, Comps::Ant& ant) {
-            ant.lifetime -= delta;
+        auto view = context.registry.view<Comps::Ant, const Comps::Alive>();
+        view.each([&context](const entt::entity entity, Comps::Ant& ant) {
+            ant.lifetime -= context.deltaTime;
             if (ant.lifetime <= 0) {
-                registry.emplace<Comps::Dead>(entity);
-                registry.remove<Comps::Alive>(entity);
+                context.registry.emplace<Comps::Dead>(entity);
+                context.registry.remove<Comps::Alive>(entity);
             }
         });
     }
 
-    void antDeath(entt::registry& registry)
+    void antDeath(Context& context)
     {
-        auto view = registry.view<Comps::Ant, const Comps::Trans, const Comps::Dead>();
-        view.each([&registry](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
-            Prefabs::createFood(registry, trans.position);
-            registry.destroy(entity);
+        auto view = context.registry.view<Comps::Ant, const Comps::Trans, const Comps::Dead>();
+        view.each([&context](const entt::entity entity, Comps::Ant& ant, const Comps::Trans& trans) {
+            Prefabs::createFood(context.registry, trans.position);
+            context.registry.destroy(entity);
         });
     }
 
-    void antBringFoodHome(entt::registry& registry)
+    void antBringFoodHome(Context& context)
     {
     }
 
-    void handleSpatialHashRegistration(entt::registry& registry, SpatialHash& spatialHash)
+    void handleSpatialHashRegistration(Context& context)
     {
-        auto view = registry.view<const Comps::Trans, Comps::SpriteRender, const Comps::StaticSpatialRegister>();
-        view.each([&registry, &spatialHash](const entt::entity entity, const Comps::Trans& trans, Comps::SpriteRender& spriteRender) {
+        auto view = context.registry.view<const Comps::Trans, Comps::SpriteRender, const Comps::StaticSpatialRegister>();
+        view.each([&context](const entt::entity entity, const Comps::Trans& trans, Comps::SpriteRender& spriteRender) {
             float width = spriteRender.width();
             float height = spriteRender.height();
-            spatialHash.add(trans.position, { width, height }, entity);
-            registry.emplace<Comps::SpatialHashEntry>(entity);
-            registry.remove<Comps::StaticSpatialRegister>(entity);
+            context.spatialHash.add(trans.position, { width, height }, entity);
+            context.registry.emplace<Comps::SpatialHashEntry>(entity);
+            context.registry.remove<Comps::StaticSpatialRegister>(entity);
             });
     }
 
@@ -163,27 +182,27 @@ namespace Systems {
     }*/
 
 
-    void renderSpatialHash(entt::registry& registry, SpatialHash& spatialHash)
+    void renderSpatialHash(Context& context)
     {
-        float cellSize = spatialHash.getCellSize();
-        for (const auto& kv : spatialHash.getData()) {
+        float cellSize = context.spatialHash.getCellSize();
+        for (const auto& kv : context.spatialHash.getData()) {
             const auto& point = kv.first;
             DrawRectangleLines(point.x * cellSize, point.y * cellSize, cellSize, cellSize, BLUE);
         }
     }
 
-    void renderVelocity(entt::registry& registry)
+    void renderVelocity(Context& context)
     {
-        auto view = registry.view<const Comps::Trans, const Comps::Velocity>();
-        view.each([&registry](const Comps::Trans& trans, const Comps::Velocity& vel) {
+        auto view = context.registry.view<const Comps::Trans, const Comps::Velocity>();
+        view.each([&context](const Comps::Trans& trans, const Comps::Velocity& vel) {
             DrawLine(trans.position.x, trans.position.y, trans.position.x + vel.value.x, trans.position.y + vel.value.y, RED);
             });
     }
 
     
 
-    void pheromoneLifetime(float delta, Grid<std::unique_ptr<WorldGridEntry>>& grid) {
-        for (int x = 0; x < grid.getSizeX(); x++) {
+    void pheromoneLifetime(Context& context) {
+       /* for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
                 WorldGridEntry* entry = grid.get(cellPos)->get();
@@ -194,6 +213,6 @@ namespace Systems {
                         grid.remove(cellPos);
                 }
             }
-        }
+        }*/
     }
 }

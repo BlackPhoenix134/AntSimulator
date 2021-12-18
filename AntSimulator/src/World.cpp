@@ -4,64 +4,68 @@
 
 World::World()
 {
-
+    for (auto i = 0; i < 100; ++i) {
+        auto entity = Prefabs::createAnt(context.registry, { 0,0 });
+    }
 }
 
 World::~World()
 {
 }
 
-void World::update(entt::registry& registry, float delta) {
-    Systems::applyVelocity(registry, delta);
+void World::update(float delta) {
+    context.deltaTime = delta;
+    Systems::applyVelocity(context);
 
-    updateRendering(registry, delta);
-    updateDebugRendering(registry, delta);
+    updateRendering(context);
+    updateDebugRendering(context);
 }
 
-void World::fixedUpdate(entt::registry& registry, float delta) {
-    updatePhysics(registry, delta);
-    updateAntLogic(registry, delta);
-    updatePheromoneLogic(registry, delta);
+void World::fixedUpdate(float delta) {
+    context.deltaTime = delta;
+    updatePhysics(context);
+    updateAntLogic(context);
+    updatePheromoneLogic(context);
 }
 
-void World::updateUI(entt::registry& registry)
+void World::updateUI(float delta)
 {
-    
+    context.deltaTime = delta;
 }
 
 
-void World::updateRendering(entt::registry& registry, float delta)
+void World::updateRendering(Context& context)
 {
-    Systems::loadTextures(registry);
-    Systems::renderWorldGridEntries(grid);
-    Systems::render(registry);
+    Systems::loadTextures(context);
+    Systems::renderWorldGridEntries(context);
+    Systems::render(context);
 }
 
-void World::updateDebugRendering(entt::registry& registry, float delta)
+void World::updateDebugRendering(Context& context)
 {
-    Systems::renderAABB(registry);
-    Systems::renderSpatialHash(registry, spatialHash);
-    Systems::renderVelocity(registry);
+    Systems::renderAABB(context);
+    Systems::renderSpatialHash(context);
+    Systems::renderVelocity(context);
 }
 
-void World::updatePhysics(entt::registry& registry, float delta)
+void World::updatePhysics(Context& context)
 {
-    Systems::handleSpatialHashRegistration(registry, spatialHash);
+    Systems::handleSpatialHashRegistration(context);
 }
 
-void World::updateAntLogic(entt::registry& registry, float delta) 
+void World::updateAntLogic(Context& context)
 {
-    Systems::antBirth(registry);
-    Systems::antLifetime(registry, delta);
-    Systems::antDeath(registry);
+    Systems::antBirth(context);
+    Systems::antLifetime(context);
+    Systems::antDeath(context);
 
-    Systems::antRandomMovement(registry);
-    Systems::antSensePheromones(registry, grid);
-    Systems::antDropPheromones(registry, delta, grid);
-    Systems::antBringFoodHome(registry);
+    Systems::antRandomMovement(context);
+    Systems::antSensePheromones(context);
+    Systems::antDropPheromones(context);
+    Systems::antBringFoodHome(context);
 }
 
-void World::updatePheromoneLogic(entt::registry& registry, float delta)
+void World::updatePheromoneLogic(Context& context)
 {
-    Systems::pheromoneLifetime(delta, grid);
+    Systems::pheromoneLifetime(context);
 }

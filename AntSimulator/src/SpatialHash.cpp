@@ -17,6 +17,11 @@ mathfu::vec2i SpatialHash::toCellIdx(const mathfu::vec2& position) //ToDo: weird
 	return mathfu::vec2i(floor(position.x / cellSize), floor(position.y / cellSize));
 }
 
+void SpatialHash::add(const mathfu::vec2& position, entt::entity value) {
+	add(toCellIdx(position), value);
+}
+
+
 void SpatialHash::add(const mathfu::vec2i& point, entt::entity value)
 {
 	if (has(point))
@@ -42,6 +47,11 @@ void SpatialHash::add(const mathfu::vec2& position, const mathfu::vec2& size, en
 			add(mathfu::vec2i(i, j), value);
 		}
 	}
+}
+
+void SpatialHash::remove(const mathfu::vec2& position, entt::entity value)
+{
+	remove(toCellIdx(position), value);
 }
 
 void SpatialHash::remove(const mathfu::vec2& position, const mathfu::vec2& size, entt::entity value)
