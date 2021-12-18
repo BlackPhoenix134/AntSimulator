@@ -2,10 +2,23 @@
 #include "Systems.hpp"
 
 
-World::World()
+World::World(Camera2D* camera)
 {
+    context.camera2D = camera;
+
     for (auto i = 0; i < 100; ++i) {
         auto entity = Prefabs::createAnt(context.registry, { 0,0 });
+    }
+
+    auto& walls = context.worldWalls;
+    for (int x = 0; x < walls.getSizeX(); x++) {
+        context.worldWalls.set(mathfu::vec2i(x, 0), 1);
+        context.worldWalls.set(mathfu::vec2i(x, walls.getSizeY() - 1), 1);
+    }
+
+    for (int y = 0; y < walls.getSizeY(); y++) {
+        context.worldWalls.set(mathfu::vec2i(0, y), 1);
+        context.worldWalls.set(mathfu::vec2i(walls.getSizeX() - 1, y), 1);
     }
 }
 
@@ -18,7 +31,6 @@ void World::update(float delta) {
     Systems::applyVelocity(context);
 
     updateRendering(context);
-    updateDebugRendering(context);
 }
 
 void World::fixedUpdate(float delta) {
@@ -37,16 +49,19 @@ void World::updateUI(float delta)
 void World::updateRendering(Context& context)
 {
     Systems::loadTextures(context);
-    Systems::renderWorldGridEntries(context);
-    Systems::render(context);
+    auto cam = *context.camera2D;
+    auto topLeft = GetScreenToWorld2D({ 0,0 }, cam);
+    auto botRight = GetScreenToWorld2D({ (float)GetScreenWidth(),(float)GetScreenHeight() }, cam);
+
+    mathfu::rectf viewport = mathfu::rectf(topLeft.x, topLeft.y, botRight.x - topLeft.x, botRight.y - topLeft.y);
+    Systems::renderWorldGridEntries(context, viewport);
+    Systems::render(context, viewport);
+    Systems::renderWorldWalls(context, viewport);
+
+    Systems::renderSpatialHash(context, viewport);
+    Systems::renderVelocity(context, viewport);
 }
 
-void World::updateDebugRendering(Context& context)
-{
-    Systems::renderAABB(context);
-    Systems::renderSpatialHash(context);
-    Systems::renderVelocity(context);
-}
 
 void World::updatePhysics(Context& context)
 {

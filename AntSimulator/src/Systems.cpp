@@ -13,19 +13,25 @@ namespace Systems {
             });
     }
 
-    void render(Context& context) {
+    void render(Context& context, mathfu::rectf& viewport) {
         auto view = context.registry.view<const Comps::Trans, Comps::SpriteRender>();
-        view.each([](const Comps::Trans& trans, Comps::SpriteRender& spriteRender) {
+        view.each([&](entt::entity entity, const Comps::Trans& trans, Comps::SpriteRender& spriteRender) {
             float width = spriteRender.width();
             float height = spriteRender.height();
-            Rectangle destination = { trans.position.x, trans.position.y , width, height };
-            DrawTexturePro(spriteRender.texture, spriteRender.sourceRect, destination, {width/2, height/2}, trans.rotation, spriteRender.tint);
-            DrawRectangleLines(trans.position.x - width / 2, trans.position.y - height / 2, width, height, RED);
-            });
+            if (intersects(viewport, { trans.position.x, trans.position.y , width, height })) {
+                Rectangle destination = { trans.position.x, trans.position.y , width, height };
+                DrawTexturePro(spriteRender.texture, spriteRender.sourceRect, destination, { width / 2, height / 2 }, trans.rotation, spriteRender.tint);
+               
+                if (context.registry.all_of<Comps::ShowAABB>(entity)) {
+                    DrawRectangleLines(trans.position.x - width / 2, trans.position.y - height / 2, width, height, RED);
+                }
+            
+            }
+        });
     }
 
 
-    void renderWorldGridEntries(Context& context) {
+    void renderWorldGridEntries(Context& context, mathfu::rectf& viewport) {
        /* for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
                 auto cellPos = mathfu::vec2i(x, y);
@@ -45,7 +51,7 @@ namespace Systems {
         }*/
     }
 
-    void renderWorldWalls(Context& context)
+    void renderWorldWalls(Context& context, mathfu::rectf& viewport)
     {
          auto& worldWalls = context.worldWalls;
          auto texture = Assets::get("assets/marker.png");
@@ -54,23 +60,16 @@ namespace Systems {
 
          for (int x = 0; x < worldWalls.getSizeX(); x++) {
              for (int y = 0; y < worldWalls.getSizeY(); y++) {
-                 if (*worldWalls.get(mathfu::vec2i(x,y))) {
-                     auto pos = mathfu::vec2(x, y);
-                     Rectangle destination = { pos.x, pos.y , width, height};
-                     DrawTexturePro(texture, { 0,0,(float)texture.width,(float)texture.height }, destination, { width / 2, height / 2 }, 0, WHITE);
+                 if (*worldWalls.get(mathfu::vec2i(x, y)) == 1) {
+                     auto pos = worldWalls.toWorldPos(mathfu::vec2i(x, y));
 
+                     if (intersects(viewport, { pos.x, pos.y , width, height })) {
+                         Rectangle destination = { pos.x, pos.y , width, height };
+                         DrawTexturePro(texture, { 0,0,(float)texture.width,(float)texture.height }, destination, { width / 2, height / 2 }, 0, RED);
+                     }
                  }
              }
          }
-    }
-
-    void renderAABB(Context& context) {
-        auto view = context.registry.view<const Comps::Trans, Comps::SpriteRender, const Comps::ShowAABB>();
-        view.each([](const Comps::Trans& trans, Comps::SpriteRender& spriteRender) {
-            float width = spriteRender.width();
-            float height = spriteRender.height();
-            DrawRectangleLines(trans.position.x - width / 2, trans.position.y - height / 2, width, height, RED);
-            });
     }
 
     void applyVelocity(Context& context) {
@@ -182,7 +181,7 @@ namespace Systems {
     }*/
 
 
-    void renderSpatialHash(Context& context)
+    void renderSpatialHash(Context& context, mathfu::rectf& viewport)
     {
         float cellSize = context.spatialHash.getCellSize();
         for (const auto& kv : context.spatialHash.getData()) {
@@ -191,15 +190,13 @@ namespace Systems {
         }
     }
 
-    void renderVelocity(Context& context)
+    void renderVelocity(Context& context, mathfu::rectf& viewport)
     {
         auto view = context.registry.view<const Comps::Trans, const Comps::Velocity>();
         view.each([&context](const Comps::Trans& trans, const Comps::Velocity& vel) {
-            DrawLine(trans.position.x, trans.position.y, trans.position.x + vel.value.x, trans.position.y + vel.value.y, RED);
             });
     }
 
-    
 
     void pheromoneLifetime(Context& context) {
        /* for (int x = 0; x < grid.getSizeX(); x++) {

@@ -21,8 +21,7 @@ int main()
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-
-    std::unique_ptr<World> world(new World());
+    std::unique_ptr<World> world(new World(&camera));
 
   
     while (!WindowShouldClose())

@@ -5,15 +5,13 @@
 
 class World {
 private:
-
     Context context = Context();
     void updateRendering(Context& context);
-    void updateDebugRendering(Context& context);
     void updatePhysics(Context& context);
     void updateAntLogic(Context& context);
     void updatePheromoneLogic(Context& context);
 public:
-    World();
+    World(Camera2D* camera);
     ~World();
     void update(float delta);
     void fixedUpdate(float delta);

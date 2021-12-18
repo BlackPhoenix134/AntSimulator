@@ -3,15 +3,16 @@
 #include "SpatialHash.hpp"
 #include "Grid.hpp"
 #include "Context.hpp"
+#include "mathfu/rect.h"
 
 namespace Systems {
     void loadTextures(Context& context);
-    void render(Context& context);
-    void renderAABB(Context& context);
-    void renderSpatialHash(Context& context);
-    void renderVelocity(Context& context);
-    void renderWorldGridEntries(Context& context);
-    void renderWorldWalls(Context& context);
+
+    void render(Context& context, mathfu::rectf& viewport);
+    void renderSpatialHash(Context& context, mathfu::rectf& viewport);
+    void renderVelocity(Context& context, mathfu::rectf& viewport);
+    void renderWorldGridEntries(Context& context, mathfu::rectf& viewport);
+    void renderWorldWalls(Context& context, mathfu::rectf& viewport);
 
     void applyVelocity(Context& context);
 
