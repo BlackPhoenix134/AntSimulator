@@ -1,5 +1,4 @@
 #include "aspch.hpp"
-#include "Systems.hpp"
 #include "raylib.h"
 #include "random.hpp"
 #include "entt.hpp"
@@ -31,21 +30,16 @@ namespace Systems {
     }
 
 
-    void renderWorldGridEntries(Context& context, mathfu::rectf& viewport) {
-       /* for (int x = 0; x < grid.getSizeX(); x++) {
+    void renderWorldGridCells(Context& context, mathfu::rectf& viewport) {
+       /* auto& grid = context.worldGrid;
+        float cellSize = grid.getCellSize();
+        
+        for (int x = 0; x < grid.getSizeX(); x++) {
             for (int y = 0; y < grid.getSizeY(); y++) {
-                auto cellPos = mathfu::vec2i(x, y);
-                auto* entry = grid.get(cellPos)->get();
-                if (entry != nullptr) {
-                    auto texture = entry->getTexture();
-                    auto worldPos = grid.toWorldPos(cellPos);
-
-                    float destWidth = texture.width * grid.getCellSize() / texture.width;
-                    float destHeight = texture.height * grid.getCellSize() / texture.height;
-
-                    DrawTexturePro(texture, { 0, 0, (float)texture.width, (float)texture.height },
-                        { worldPos.x, worldPos.y, destWidth, destHeight },
-                        { destWidth / 2, destHeight / 2 }, 0, entry->getColor());
+                mathfu::vec2i cellIdx = mathfu::vec2i(x, y);
+                if (grid.get(cellIdx)->size() != 0) {
+                        DrawRectangleLines(cellIdx.x * cellSize, cellIdx.y * cellSize, cellSize, cellSize, BLUE);
+                    }
                 }
             }
         }*/

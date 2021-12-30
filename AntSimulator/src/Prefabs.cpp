@@ -17,6 +17,7 @@ namespace Prefabs {
         registry.emplace<Comps::Ant>(entity);
         registry.emplace<Comps::Alive>(entity);
         registry.emplace<Comps::Newborn>(entity);
+        registry.emplace<Comps::ShowAABB>(entity);
         return entity;
 	}
 

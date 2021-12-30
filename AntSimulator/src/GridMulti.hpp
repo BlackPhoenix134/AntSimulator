@@ -1,72 +1,68 @@
 #pragma once
 #include "mathfu/glsl_mappings.h"
+#include "mathfu/constants.h"
 
 
 template <typename T>
-class Grid
+class GridMulti
 {
-	//starts top left
 public:
-
-	
-	Grid(short sizeX, short sizeY, int cellSize) : Grid(sizeX, sizeY, cellSize, mathfu::kZeros2f) {
+	GridMulti(short sizeX, short sizeY, int cellSize) : GridMulti(sizeX, sizeY, cellSize, mathfu::kZeros2f) {
 	}
 
-	
-	Grid(short sizeX, short sizeY, int cellSize, mathfu::vec2 offset) : sizeX(sizeX), sizeY(sizeY),
+	GridMulti(short sizeX, short sizeY, int cellSize, mathfu::vec2 offset) : sizeX(sizeX), sizeY(sizeY),
 		cellSize(cellSize), offset(offset) {
 		data.resize(sizeX * sizeY);
 	}
 
-	
-	~Grid() {
+	~GridMulti() {
 
 	}
 
-	
 	mathfu::vec2i toCellIdx(const mathfu::vec2& worldPos) const
 	{
 		return mathfu::vec2i(floor((worldPos.x - offset.x) / cellSize), floor((worldPos.y - offset.y) / cellSize));
 	}
 
-	
 	mathfu::vec2 toWorldPos(const mathfu::vec2i& cellIdx) const
 	{
 		return mathfu::vec2(cellIdx.x * cellSize + offset.x, cellIdx.y * cellSize + offset.y);
 	}
 
-	
-	T* get(const mathfu::vec2i& cellIdx) {
+
+	std::unordered_set<T>* get(const mathfu::vec2i& cellIdx) {
 		return &data[sizeX * cellIdx.y + cellIdx.x];
 	}
 
 	void set(const mathfu::vec2i& cellIdx, const T& value)
 	{
-		data[sizeX * cellIdx.y + cellIdx.x] = value;
+		auto* container = get(cellIdx);
+		container->emplace(value);
 	}
 
 	void set(const mathfu::vec2i& cellIdx, T&& value)
 	{
-		data[sizeX * cellIdx.y + cellIdx.x] = std::move(value);
+		set(cellIdx, std::move(value));
 	}
 
-	void remove(const mathfu::vec2i& cellIdx)
+	void remove(const mathfu::vec2i& cellIdx, entt::entity value)
 	{
-		data[sizeX * cellIdx.y + cellIdx.x] = nullptr;
+		auto* container = get(cellIdx);
+		container->erase(value);
 	}
 
 
-	T* get(const mathfu::vec2& worldPos) {
+	std::unordered_set<T>* get(const mathfu::vec2& worldPos) {
 		return get(toCellIdx(worldPos));
 	}
 
 	bool has(const mathfu::vec2i& cellIdx)
 	{
-		return data[sizeX * cellIdx.y + cellIdx.x] != nullptr;
+		return data[sizeX * cellIdx.y + cellIdx.x].size()  > 0;
 	}
 
-	
-	const std::vector<T>& getData() {
+
+	const std::vector<std::unordered_set<T>>& getData() {
 		return data;
 	}
 
@@ -82,10 +78,12 @@ public:
 	short getCellSize() {
 		return cellSize;
 	}
+
 private:
 	short sizeX;
 	short sizeY;
 	short cellSize;
-	std::vector<T> data;
+	std::vector<std::unordered_set<T>> data;
 	mathfu::vec2 offset;
 };
+

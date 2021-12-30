@@ -54,7 +54,7 @@ void World::updateRendering(Context& context)
     auto botRight = GetScreenToWorld2D({ (float)GetScreenWidth(),(float)GetScreenHeight() }, cam);
 
     mathfu::rectf viewport = mathfu::rectf(topLeft.x, topLeft.y, botRight.x - topLeft.x, botRight.y - topLeft.y);
-    Systems::renderWorldGridEntries(context, viewport);
+    Systems::renderWorldGridCells(context, viewport);
     Systems::render(context, viewport);
     Systems::renderWorldWalls(context, viewport);
 

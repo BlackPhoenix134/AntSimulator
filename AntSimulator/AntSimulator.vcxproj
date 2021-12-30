@@ -97,6 +97,7 @@
     <ClInclude Include="src\DebugComps.hpp" />
     <ClInclude Include="src\GeneralComps.hpp" />
     <ClInclude Include="src\Grid.hpp" />
+    <ClInclude Include="src\GridMulti.hpp" />
     <ClInclude Include="src\Prefabs.hpp" />
     <ClInclude Include="src\Random.hpp" />
     <ClInclude Include="src\RenderComps.hpp" />
@@ -113,7 +114,6 @@
   <ItemGroup>
     <ClCompile Include="src\AntBrainComps.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
-    <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\Prefabs.cpp" />
     <ClCompile Include="src\SceneData.cpp" />
     <ClCompile Include="src\SpatialHash.cpp" />

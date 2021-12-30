@@ -11,7 +11,7 @@ namespace Systems {
     void render(Context& context, mathfu::rectf& viewport);
     void renderSpatialHash(Context& context, mathfu::rectf& viewport);
     void renderVelocity(Context& context, mathfu::rectf& viewport);
-    void renderWorldGridEntries(Context& context, mathfu::rectf& viewport);
+    void renderWorldGridCells(Context& context, mathfu::rectf& viewport);
     void renderWorldWalls(Context& context, mathfu::rectf& viewport);
 
     void applyVelocity(Context& context);
